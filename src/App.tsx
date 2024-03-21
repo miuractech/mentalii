@@ -1,25 +1,33 @@
+// src/App.tsx
+
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from './config'; // Make sure this path is correct
+import AuthPage from './auth'; // Update with your actual auth component path
+import ChatPage from './ChatPage'; // Update with your actual chat component path
+import { MantineProvider } from '@mantine/core';
+import '@mantine/core/styles.css';
 
 function App() {
+  const [user, loading, error] = useAuthState(auth);
+
+  if (loading) {
+    return (
+      <div>Loading...</div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div>Error: {error.message}</div>
+    );
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    
+      <div className="max-w-md w-full mx-auto h-screen shadow-lg">
+        {user ? <ChatPage /> : <AuthPage />}
+      </div>
   );
 }
 
